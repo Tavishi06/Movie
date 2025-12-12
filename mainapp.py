@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          CINEMAVERSE - MAIN APPLICATION
 #                        Modular Movie Discovery Platform
@@ -169,7 +168,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-=======
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          CINEMAVERSE - MAIN APPLICATION
 #                        Modular Movie Discovery Platform
@@ -340,4 +339,3 @@ def main():
 
 if __name__ == "__main__":
     main()
->>>>>>> b066661fa3c44083bac562c9d02249f642abbc88
