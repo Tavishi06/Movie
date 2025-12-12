@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-streamlit>=1.28.0
-requests>=2.31.0
-pillow>=10.0.0
-numpy>=1.24.0
-google-api-python-client>=2.90.0
-=======
-streamlit>=1.28.0
-requests>=2.31.0
-pillow>=10.0.0
-numpy>=1.24.0
-google-api-python-client>=2.90.0
->>>>>>> b066661fa3c44083bac562c9d02249f642abbc88
+streamlit
+requests
+pillow
+python-dotenv
+beautifulsoup4
+
