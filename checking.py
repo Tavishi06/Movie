@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import requests
 
 # --- YOUR KEYS ---
@@ -64,7 +63,7 @@ def check_tmdb(api_key):
 print(f"OMDb Key:      {check_omdb(OMDB_API_KEY)}")
 print(f"Watchmode Key: {check_watchmode(WATCHMODE_API_KEY)}")
 print(f"YouTube Key:   {check_youtube(YOUTUBE_API_KEY)}")
-=======
+
 import requests
 
 # --- YOUR KEYS ---
