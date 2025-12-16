@@ -4,26 +4,14 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 import streamlit as st
-import time
-
-from config import (
-    APP_TITLE,
-    APP_SUBTITLE,
-    APP_ICON,
-    COLORS,
-    FONTS,
-    SESSION_STATE_DEFAULTS
-)
-
-from api_handlers import (
-    fetch_movie_data,
-    fetch_search_suggestions,
-    fetch_youtube_trailer
-)
+from datetime import datetime
+from config import APP_TITLE, APP_SUBTITLE, APP_ICON, COLORS, FONTS, SESSION_STATE_DEFAULTS
+from api_handlers import fetch_movie_data, fetch_search_suggestions, fetch_youtube_trailer
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ──────────────────────────────────────────────────────────────────────────────
+
 st.set_page_config(
     page_title=APP_TITLE,
     page_icon=APP_ICON,
@@ -33,36 +21,26 @@ st.set_page_config(
 # ──────────────────────────────────────────────────────────────────────────────
 # GRADIENT BACKGROUND
 # ──────────────────────────────────────────────────────────────────────────────
-# Add gradient colors if not present
-if "gradient_start" not in COLORS:
-    COLORS["gradient_start"] = "#0f2027"
-if "gradient_end" not in COLORS:
-    COLORS["gradient_end"] = "#2c5364"
-if "text_light" not in COLORS:
-    COLORS["text_light"] = "#ffffff"
 
 st.markdown(
     f"""
     <style>
-    .stApp {{
-        background: linear-gradient(135deg, {COLORS['gradient_start']}, {COLORS['gradient_end']});
-        color: {COLORS['text_light']};
+    body {{
+        background: linear-gradient(135deg, {COLORS['neon_blue']}, {COLORS['neon_purple']});
+        color: white;
         font-family: {FONTS['body']};
     }}
     h1, h2, h3, h4, h5, h6 {{
-        color: {COLORS['text_light']};
         font-family: {FONTS['header']};
     }}
-    .stButton>button {{
-        background-color: {COLORS['neon_blue']};
-        color: {COLORS['dark_bg']};
-        font-weight: bold;
-        border-radius: 10px;
-        padding: 0.5em 1em;
-    }}
-    .stTextInput>div>input {{
+    .stTextInput>div>div>input {{
         background-color: rgba(255,255,255,0.1);
-        color: {COLORS['text_light']};
+        color: white;
+    }}
+    .stButton>button {{
+        background-color: {COLORS['neon_orange']};
+        color: white;
+        font-weight: bold;
     }}
     </style>
     """,
@@ -72,6 +50,7 @@ st.markdown(
 # ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
 # ──────────────────────────────────────────────────────────────────────────────
+
 for key, value in SESSION_STATE_DEFAULTS.items():
     if key not in st.session_state:
         st.session_state[key] = value
@@ -79,6 +58,7 @@ for key, value in SESSION_STATE_DEFAULTS.items():
 # ──────────────────────────────────────────────────────────────────────────────
 # HEADER
 # ──────────────────────────────────────────────────────────────────────────────
+
 st.markdown(
     f"""
     <h1 style="text-align:center;">{APP_ICON} {APP_TITLE}</h1>
@@ -86,11 +66,13 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 st.divider()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH INPUT
 # ──────────────────────────────────────────────────────────────────────────────
+
 query = st.text_input(
     "🔍 Enter movie name",
     key="search_query",
@@ -100,6 +82,7 @@ query = st.text_input(
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH SUGGESTIONS
 # ──────────────────────────────────────────────────────────────────────────────
+
 suggestions = fetch_search_suggestions(query) if query and len(query) >= 2 else []
 
 if suggestions:
@@ -107,42 +90,42 @@ if suggestions:
     for movie in suggestions:
         col1, col2 = st.columns([1, 6])
         with col1:
-            if movie["poster"]:
+            if movie.get("poster"):
                 st.image(movie["poster"], width=70)
         with col2:
-            if st.button(
-                f"{movie['title']} ({movie['year']}) ⭐ {movie['rating']}",
+            if movie.get("title") and st.button(
+                f"{movie['title']} ({movie.get('year', 'N/A')}) ⭐ {movie.get('rating', 0)}",
                 key=f"suggest_{movie['id']}"
             ):
-                st.session_state.search_query = movie["title"]
-                st.session_state.should_search = True
-                st.rerun()
+                try:
+                    st.session_state.search_query = movie["title"]
+                    st.session_state.should_search = True
+                    st.experimental_rerun()
+                except Exception as e:
+                    st.error(f"Error selecting movie: {e}")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH BUTTON
 # ──────────────────────────────────────────────────────────────────────────────
+
 if st.button("🎬 Search Movie"):
     st.session_state.should_search = True
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FETCH & DISPLAY MOVIE
 # ──────────────────────────────────────────────────────────────────────────────
-if st.session_state.should_search and st.session_state.search_query:
 
+if st.session_state.should_search and st.session_state.search_query:
     with st.spinner("🎥 Fetching movie details..."):
         movie_data, error = fetch_movie_data(st.session_state.search_query)
-
     st.session_state.should_search = False
 
     if error:
         st.error(error)
-
     elif movie_data:
         st.divider()
-
-        # ───── MOVIE TITLE ─────
         st.markdown(
-            f"<h2>🎬 {movie_data.get('Title')} ({movie_data.get('Year')})</h2>",
+            f"<h2 style='text-align:center;'>{movie_data.get('Title')} ({movie_data.get('Year')})</h2>",
             unsafe_allow_html=True
         )
 
@@ -166,7 +149,7 @@ if st.session_state.should_search and st.session_state.search_query:
             st.write("**Plot:**")
             st.write(movie_data.get("Plot"))
 
-        # ───── TRAILER
+        # ───── TRAILER & LINK
         trailer_url = fetch_youtube_trailer(
             movie_data.get("Title"),
             movie_data.get("Year", "")
@@ -176,12 +159,13 @@ if st.session_state.should_search and st.session_state.search_query:
             st.divider()
             st.markdown("### ▶️ Official Trailer")
             st.video(trailer_url)
-            st.markdown(f"[📺 Watch on YouTube]({trailer_url})", unsafe_allow_html=True)
+            st.markdown(f"[➡️ Watch on YouTube]({trailer_url})", unsafe_allow_html=True)
         else:
             st.info("Trailer not available")
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FOOTER
 # ──────────────────────────────────────────────────────────────────────────────
+
 st.divider()
 st.caption("🎥 CinemaVerse • Powered by OMDB, TMDB & YouTube")
