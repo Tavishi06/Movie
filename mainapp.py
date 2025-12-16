@@ -199,17 +199,26 @@ if st.session_state.should_search and st.session_state.search_query:
             st.write("**Plot:**")
             st.write(movie_data.get("Plot"))
 
-        # Trailer
-        trailer_url = fetch_youtube_trailer(
-            movie_data.get("Title"),
-            movie_data.get("Year", "")
-        )
-        if trailer_url:
-            st.divider()
-            st.markdown("### ▶️ Official Trailer")
-            st.video(trailer_url)
-        else:
-            st.info("Trailer not available")
+       # ──────────────────────────────────────────────────────────────────────────────
+       # TRAILER & WATCH LINK
+       # ──────────────────────────────────────────────────────────────────────────────
+       trailer_url = fetch_youtube_trailer(
+           movie_data.get("Title"),
+           movie_data.get("Year", "")
+       )
+
+if trailer_url:
+    st.divider()
+    st.markdown("### ▶️ Official Trailer")
+    st.video(trailer_url)
+    st.markdown(f"[🔗 Watch on YouTube]({trailer_url})", unsafe_allow_html=True)
+else:
+    # If trailer not found, provide YouTube search link
+    search_query = f"{movie_data.get('Title')} {movie_data.get('Year', '')} full movie"
+    youtube_search_url = f"https://www.youtube.com/results?search_query={search_query.replace(' ', '+')}"
+    st.info("Trailer not available")
+    st.markdown(f"[🔗 Search on YouTube]({youtube_search_url})", unsafe_allow_html=True)
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FOOTER
