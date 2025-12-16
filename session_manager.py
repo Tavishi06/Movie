@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          SESSION STATE MANAGER MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -102,7 +102,7 @@ def reset_search():
     st.session_state.current_movie = None
     st.session_state.search_suggestions = []
     st.session_state.should_search = False
-=======
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          SESSION STATE MANAGER MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -206,4 +206,3 @@ def reset_search():
     st.session_state.current_movie = None
     st.session_state.search_suggestions = []
     st.session_state.should_search = False
->>>>>>> b066661fa3c44083bac562c9d02249f642abbc88
