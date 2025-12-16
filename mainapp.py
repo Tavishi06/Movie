@@ -22,30 +22,50 @@ st.set_page_config(
 # GRADIENT BACKGROUND
 # ──────────────────────────────────────────────────────────────────────────────
 
+# ──────────────────────────────────────────────────────────────────────────────
+# CUSTOM BACKGROUND & STYLING
+# ──────────────────────────────────────────────────────────────────────────────
+
 st.markdown(
     f"""
     <style>
-    body {{
-        background: linear-gradient(135deg, {COLORS['neon_blue']}, {COLORS['neon_purple']});
+    /* Gradient Background */
+    .stApp {{
+        background: linear-gradient(135deg, #00f5ff, #ff006e);
+        background-attachment: fixed;
         color: white;
-        font-family: {FONTS['body']};
     }}
+
+    /* Headers */
     h1, h2, h3, h4, h5, h6 {{
-        font-family: {FONTS['header']};
+        color: #ffffff;
+        font-family: 'Orbitron', sans-serif;
     }}
-    .stTextInput>div>div>input {{
-        background-color: rgba(255,255,255,0.1);
-        color: white;
+
+    /* Text */
+    p, span, div {{
+        color: #f0f0f0;
+        font-family: 'Rajdhani', sans-serif;
     }}
+
+    /* Cards / Containers */
+    .stCard, .stContainer {{
+        background: rgba(15, 15, 25, 0.85);
+        border-radius: 15px;
+        padding: 10px;
+    }}
+
+    /* Buttons */
     .stButton>button {{
-        background-color: {COLORS['neon_orange']};
+        background: #bf00ff;
         color: white;
-        font-weight: bold;
+        border-radius: 10px;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
