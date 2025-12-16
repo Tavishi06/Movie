@@ -4,14 +4,15 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 import streamlit as st
-
+import time
 from config import (
     APP_TITLE,
     APP_SUBTITLE,
     APP_ICON,
+    COLORS,
+    FONTS,
     SESSION_STATE_DEFAULTS
 )
-
 from api_handlers import (
     fetch_movie_data,
     fetch_search_suggestions,
@@ -21,7 +22,6 @@ from api_handlers import (
 # ──────────────────────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ──────────────────────────────────────────────────────────────────────────────
-
 st.set_page_config(
     page_title=APP_TITLE,
     page_icon=APP_ICON,
@@ -29,69 +29,102 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
-# BACKGROUND + THEME (✨ NEW)
-# ──────────────────────────────────────────────────────────────────────────────
-
-st.markdown(
-    """
-    <style>
-    /* Input box text color */
-    .stTextInput input {
-        color: #00f5ff;          /* text color */
-        background-color: rgba(255, 255, 255, 0.1); /* slight transparent bg */
-        border-radius: 10px;
-        border: 1px solid #00f5ff;
-    }
-
-    /* Placeholder color */
-    .stTextInput input::placeholder {
-        color: #a0a0a0;
-        opacity: 1;
-    }
-
-    /* Change search button style */
-    div.stButton > button:first-child {
-        background-color: #00f5ff;
-        color: #0a0a0f;
-        border-radius: 12px;
-    }
-
-    div.stButton > button:first-child:hover {
-        background-color: #00c8ff;
-        color: #000;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
 # ──────────────────────────────────────────────────────────────────────────────
-
 for key, value in SESSION_STATE_DEFAULTS.items():
     if key not in st.session_state:
         st.session_state[key] = value
 
 # ──────────────────────────────────────────────────────────────────────────────
-# HEADER
+# STYLING: GRADIENT BACKGROUND + NEON THEME
 # ──────────────────────────────────────────────────────────────────────────────
-
 st.markdown(
     f"""
-    <div class="glass-card" style="text-align:center;">
-        <h1>{APP_ICON} {APP_TITLE}</h1>
-        <p style="font-size:18px;">{APP_SUBTITLE}</p>
-    </div>
+    <style>
+    /* Full page gradient background */
+    .stApp {{
+        background: linear-gradient(135deg, #0a0a0f, #1f0033, #300050);
+        background-attachment: fixed;
+        color: #00f5ff;
+        font-family: {FONTS['body']};
+    }}
+
+    /* Headers */
+    h1, h2, h3, h4 {{
+        color: #00f5ff;
+        font-family: {FONTS['header']};
+        text-shadow: 0 0 8px #00f5ff, 0 0 16px #bf00ff;
+    }}
+
+    /* Text input box */
+    .stTextInput input {{
+        color: #00f5ff;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 10px;
+        border: 1px solid #00f5ff;
+    }}
+
+    .stTextInput input::placeholder {{
+        color: #a0a0a0;
+        opacity: 1;
+    }}
+
+    /* Buttons */
+    div.stButton > button:first-child {{
+        background-color: #00f5ff;
+        color: #0a0a0f;
+        border-radius: 12px;
+        font-weight: bold;
+    }}
+
+    div.stButton > button:first-child:hover {{
+        background-color: #bf00ff;
+        color: #fff;
+    }}
+
+    /* Movie poster container */
+    .stImage > img {{
+        border-radius: 12px;
+        box-shadow: 0 0 20px #00f5ff;
+    }}
+
+    /* Divider style */
+    hr {{
+        border-top: 1px solid #00f5ff;
+    }}
+
+    /* Captions and info */
+    .stCaption {{
+        color: #a0a0a0;
+    }}
+
+    /* Suggestions box */
+    .suggestion {{
+        background-color: rgba(0,0,0,0.6);
+        padding: 8px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+    }}
+    </style>
     """,
     unsafe_allow_html=True
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
+# HEADER
+# ──────────────────────────────────────────────────────────────────────────────
+st.markdown(
+    f"""
+    <h1 style="text-align:center;">{APP_ICON} {APP_TITLE}</h1>
+    <p style="text-align:center;">{APP_SUBTITLE}</p>
+    """,
+    unsafe_allow_html=True
+)
+st.divider()
+
+# ──────────────────────────────────────────────────────────────────────────────
 # SEARCH INPUT
 # ──────────────────────────────────────────────────────────────────────────────
-
 query = st.text_input(
     "🔍 Enter movie name",
     key="search_query",
@@ -101,7 +134,6 @@ query = st.text_input(
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH SUGGESTIONS
 # ──────────────────────────────────────────────────────────────────────────────
-
 if query and len(query) >= 2:
     suggestions = fetch_search_suggestions(query)
 else:
@@ -109,14 +141,11 @@ else:
 
 if suggestions:
     st.markdown("### 🔮 Suggestions")
-
     for movie in suggestions:
         col1, col2 = st.columns([1, 6])
-
         with col1:
             if movie["poster"]:
                 st.image(movie["poster"], width=70)
-
         with col2:
             if st.button(
                 f"{movie['title']} ({movie['year']}) ⭐ {movie['rating']}",
@@ -129,16 +158,13 @@ if suggestions:
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH BUTTON
 # ──────────────────────────────────────────────────────────────────────────────
-
-if st.button("🎬 Search Movie", type="primary"):
+if st.button("🎬 Search Movie"):
     st.session_state.should_search = True
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FETCH & DISPLAY MOVIE
 # ──────────────────────────────────────────────────────────────────────────────
-
 if st.session_state.should_search and st.session_state.search_query:
-
     with st.spinner("🎥 Fetching movie details..."):
         movie_data, error = fetch_movie_data(st.session_state.search_query)
 
@@ -146,9 +172,8 @@ if st.session_state.should_search and st.session_state.search_query:
 
     if error:
         st.error(error)
-
     elif movie_data:
-        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+        st.divider()
 
         st.markdown(
             f"## 🎬 {movie_data.get('Title')} ({movie_data.get('Year')})"
@@ -156,7 +181,7 @@ if st.session_state.should_search and st.session_state.search_query:
 
         col1, col2 = st.columns([1, 2])
 
-        # ───── POSTER ─────
+        # Poster
         with col1:
             poster = movie_data.get("Poster")
             if poster and poster != "N/A":
@@ -164,7 +189,7 @@ if st.session_state.should_search and st.session_state.search_query:
             else:
                 st.info("Poster not available")
 
-        # ───── DETAILS ─────
+        # Movie details
         with col2:
             st.write("**IMDb Rating:**", movie_data.get("imdbRating"))
             st.write("**Genre:**", movie_data.get("Genre"))
@@ -174,29 +199,20 @@ if st.session_state.should_search and st.session_state.search_query:
             st.write("**Plot:**")
             st.write(movie_data.get("Plot"))
 
-        # ───── TRAILER ─────
+        # Trailer
         trailer_url = fetch_youtube_trailer(
             movie_data.get("Title"),
             movie_data.get("Year", "")
         )
-
         if trailer_url:
+            st.divider()
             st.markdown("### ▶️ Official Trailer")
             st.video(trailer_url)
         else:
             st.info("Trailer not available")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
 # ──────────────────────────────────────────────────────────────────────────────
 # FOOTER
 # ──────────────────────────────────────────────────────────────────────────────
-
-st.markdown(
-    """
-    <div style="text-align:center; opacity:0.7; margin-top:40px;">
-        🎥 CinemaVerse • Powered by OMDB, TMDB & YouTube
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.divider()
+st.caption("🎥 CinemaVerse • Powered by OMDB, TMDB & YouTube")
