@@ -4,7 +4,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 import streamlit as st
-import time
+from datetime import datetime
 from config import (
     APP_TITLE,
     APP_SUBTITLE,
@@ -29,6 +29,36 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────────────────────────────────────
+# CUSTOM CSS FOR GRADIENT BACKGROUND & NEON TEXT
+# ──────────────────────────────────────────────────────────────────────────────
+st.markdown(f"""
+    <style>
+        /* Gradient Background */
+        .stApp {{
+            background: linear-gradient(135deg, {COLORS['neon_blue']}, {COLORS['neon_purple']});
+            color: #ffffff;
+        }}
+        /* Neon Header */
+        h1 {{
+            color: {COLORS['neon_orange']};
+            text-shadow: 0 0 10px {COLORS['neon_orange']}, 0 0 20px {COLORS['neon_orange']};
+        }}
+        h3 {{
+            color: {COLORS['neon_green']};
+        }}
+        .stTextInput input {{
+            background-color: rgba(255,255,255,0.1) !important;
+            color: #fff !important;
+        }}
+        .stButton>button {{
+            background-color: {COLORS['neon_pink']} !important;
+            color: #fff !important;
+            border-radius: 10px;
+        }}
+    </style>
+""", unsafe_allow_html=True)
+
+# ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
 # ──────────────────────────────────────────────────────────────────────────────
 for key, value in SESSION_STATE_DEFAULTS.items():
@@ -36,88 +66,11 @@ for key, value in SESSION_STATE_DEFAULTS.items():
         st.session_state[key] = value
 
 # ──────────────────────────────────────────────────────────────────────────────
-# STYLING: GRADIENT BACKGROUND + NEON THEME
-# ──────────────────────────────────────────────────────────────────────────────
-st.markdown(
-    f"""
-    <style>
-    /* Full page gradient background */
-    .stApp {{
-        background: linear-gradient(135deg, #0a0a0f, #1f0033, #300050);
-        background-attachment: fixed;
-        color: #00f5ff;
-        font-family: {FONTS['body']};
-    }}
-
-    /* Headers */
-    h1, h2, h3, h4 {{
-        color: #00f5ff;
-        font-family: {FONTS['header']};
-        text-shadow: 0 0 8px #00f5ff, 0 0 16px #bf00ff;
-    }}
-
-    /* Text input box */
-    .stTextInput input {{
-        color: #00f5ff;
-        background-color: rgba(0,0,0,0.5);
-        border-radius: 10px;
-        border: 1px solid #00f5ff;
-    }}
-
-    .stTextInput input::placeholder {{
-        color: #a0a0a0;
-        opacity: 1;
-    }}
-
-    /* Buttons */
-    div.stButton > button:first-child {{
-        background-color: #00f5ff;
-        color: #0a0a0f;
-        border-radius: 12px;
-        font-weight: bold;
-    }}
-
-    div.stButton > button:first-child:hover {{
-        background-color: #bf00ff;
-        color: #fff;
-    }}
-
-    /* Movie poster container */
-    .stImage > img {{
-        border-radius: 12px;
-        box-shadow: 0 0 20px #00f5ff;
-    }}
-
-    /* Divider style */
-    hr {{
-        border-top: 1px solid #00f5ff;
-    }}
-
-    /* Captions and info */
-    .stCaption {{
-        color: #a0a0a0;
-    }}
-
-    /* Suggestions box */
-    .suggestion {{
-        background-color: rgba(0,0,0,0.6);
-        padding: 8px;
-        margin-bottom: 5px;
-        border-radius: 8px;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# ──────────────────────────────────────────────────────────────────────────────
 # HEADER
 # ──────────────────────────────────────────────────────────────────────────────
 st.markdown(
-    f"""
-    <h1 style="text-align:center;">{APP_ICON} {APP_TITLE}</h1>
-    <p style="text-align:center;">{APP_SUBTITLE}</p>
-    """,
+    f"<h1 style='text-align:center;'>{APP_ICON} {APP_TITLE}</h1>"
+    f"<p style='text-align:center;'>{APP_SUBTITLE}</p>",
     unsafe_allow_html=True
 )
 st.divider()
@@ -134,10 +87,7 @@ query = st.text_input(
 # ──────────────────────────────────────────────────────────────────────────────
 # SEARCH SUGGESTIONS
 # ──────────────────────────────────────────────────────────────────────────────
-if query and len(query) >= 2:
-    suggestions = fetch_search_suggestions(query)
-else:
-    suggestions = []
+suggestions = fetch_search_suggestions(query) if query and len(query) >= 2 else []
 
 if suggestions:
     st.markdown("### 🔮 Suggestions")
@@ -147,10 +97,7 @@ if suggestions:
             if movie["poster"]:
                 st.image(movie["poster"], width=70)
         with col2:
-            if st.button(
-                f"{movie['title']} ({movie['year']}) ⭐ {movie['rating']}",
-                key=f"suggest_{movie['id']}"
-            ):
+            if st.button(f"{movie['title']} ({movie['year']}) ⭐ {movie['rating']}", key=f"suggest_{movie['id']}"):
                 st.session_state.search_query = movie["title"]
                 st.session_state.should_search = True
                 st.rerun()
@@ -167,7 +114,6 @@ if st.button("🎬 Search Movie"):
 if st.session_state.should_search and st.session_state.search_query:
     with st.spinner("🎥 Fetching movie details..."):
         movie_data, error = fetch_movie_data(st.session_state.search_query)
-
     st.session_state.should_search = False
 
     if error:
@@ -175,13 +121,12 @@ if st.session_state.should_search and st.session_state.search_query:
     elif movie_data:
         st.divider()
 
-        st.markdown(
-            f"## 🎬 {movie_data.get('Title')} ({movie_data.get('Year')})"
-        )
+        # MOVIE TITLE
+        st.markdown(f"## 🎬 {movie_data.get('Title')} ({movie_data.get('Year')})")
 
         col1, col2 = st.columns([1, 2])
 
-        # Poster
+        # POSTER
         with col1:
             poster = movie_data.get("Poster")
             if poster and poster != "N/A":
@@ -189,7 +134,7 @@ if st.session_state.should_search and st.session_state.search_query:
             else:
                 st.info("Poster not available")
 
-        # Movie details
+        # DETAILS
         with col2:
             st.write("**IMDb Rating:**", movie_data.get("imdbRating"))
             st.write("**Genre:**", movie_data.get("Genre"))
@@ -199,26 +144,18 @@ if st.session_state.should_search and st.session_state.search_query:
             st.write("**Plot:**")
             st.write(movie_data.get("Plot"))
 
-       
-       # ──────────────────────────────────────────────────────────────────────────────
-       # TRAILER & WATCH LINK
-       # ──────────────────────────────────────────────────────────────────────────────
-       trailer_url = fetch_youtube_trailer(
-           movie_data.get("Title"),
-           movie_data.get("Year", "")
-       )
-       if trailer_url:
-           st.divider()
-           st.markdown("### ▶️ Official Trailer")
-           st.video(trailer_url)
-           st.markdown(f"[🔗 Watch on YouTube]({trailer_url})", unsafe_allow_html=True)
-       else:
-           # If trailer not found, provide YouTube search link
-           search_query = f"{movie_data.get('Title')} {movie_data.get('Year', '')} full movie"
-           youtube_search_url = f"https://www.youtube.com/results?search_query={search_query.replace(' ', '+')}"
-           st.info("Trailer not available")
-           st.markdown(f"[🔗 Search on YouTube]({youtube_search_url})", unsafe_allow_html=True)
-
+        # TRAILER & WATCH LINK
+        trailer_url = fetch_youtube_trailer(movie_data.get("Title"), movie_data.get("Year", ""))
+        if trailer_url:
+            st.divider()
+            st.markdown("### ▶️ Official Trailer")
+            st.video(trailer_url)
+            st.markdown(f"[🔗 Watch on YouTube]({trailer_url})", unsafe_allow_html=True)
+        else:
+            search_query = f"{movie_data.get('Title')} {movie_data.get('Year', '')} full movie"
+            youtube_search_url = f"https://www.youtube.com/results?search_query={search_query.replace(' ', '+')}"
+            st.info("Trailer not available")
+            st.markdown(f"[🔗 Search on YouTube]({youtube_search_url})", unsafe_allow_html=True)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FOOTER
