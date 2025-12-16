@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          UI COMPONENTS MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -296,7 +296,7 @@ def show_recommendations_tab(movie_data: dict):
                 <p>No recommendations available at this time.</p>
             </div>
         """, unsafe_allow_html=True)
-=======
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          UI COMPONENTS MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -594,4 +594,3 @@ def show_recommendations_tab(movie_data: dict):
                 <p>No recommendations available at this time.</p>
             </div>
         """, unsafe_allow_html=True)
->>>>>>> b066661fa3c44083bac562c9d02249f642abbc88
