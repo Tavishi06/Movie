@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          API HANDLERS MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -228,7 +227,7 @@ def fetch_youtube_trailer(title: str, year: str) -> Optional[str]:
         return None
     except:
         return None
-=======
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #                          API HANDLERS MODULE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -458,4 +457,3 @@ def fetch_youtube_trailer(title: str, year: str) -> Optional[str]:
         return None
     except:
         return None
->>>>>>> b066661fa3c44083bac562c9d02249f642abbc88
