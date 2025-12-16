@@ -35,33 +35,36 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .stApp {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        background-attachment: fixed;
-        color: white;
+    /* Input box text color */
+    .stTextInput input {
+        color: #00f5ff;          /* text color */
+        background-color: rgba(255, 255, 255, 0.1); /* slight transparent bg */
+        border-radius: 10px;
+        border: 1px solid #00f5ff;
     }
 
-    .glass-card {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 20px;
-        padding: 25px;
-        box-shadow: 0 0 30px rgba(0,0,0,0.6);
-        margin-bottom: 30px;
+    /* Placeholder color */
+    .stTextInput input::placeholder {
+        color: #a0a0a0;
+        opacity: 1;
     }
 
-    h1, h2, h3 {
-        color: #00f5ff;
+    /* Change search button style */
+    div.stButton > button:first-child {
+        background-color: #00f5ff;
+        color: #0a0a0f;
+        border-radius: 12px;
     }
 
-    button {
-        border-radius: 12px !important;
+    div.stButton > button:first-child:hover {
+        background-color: #00c8ff;
+        color: #000;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
