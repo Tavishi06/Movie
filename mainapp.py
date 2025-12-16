@@ -161,9 +161,7 @@ if st.session_state.should_search and st.session_state.search_query:
             st.video(trailer_url)
         else:
             st.info("Trailer not available")
-            
-        youtube_search_url = f"https://www.youtube.com/results?search_query={movie_title}+{movie_year}+Official+Trailer"
-        st.markdown(f"### ▶️ [Watch Trailer on YouTube]({youtube_search_url})", unsafe_allow_html=True)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # FOOTER
 # ──────────────────────────────────────────────────────────────────────────────
