@@ -58,5 +58,8 @@ SESSION_STATE_DEFAULTS = {
     "should_search": False,
     "selected_genre": "All",
     "year_range": (1900, datetime.now().year),
-    "search"
+    "search_suggestions": [],
+    "show_suggestions": False,
+    "last_search_time": 0,
+    "sidebar_section": "search"
 }
