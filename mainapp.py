@@ -31,35 +31,17 @@ st.set_page_config(
 # ──────────────────────────────────────────────────────────────────────────────
 # CUSTOM CSS FOR GRADIENT BACKGROUND & NEON TEXT
 # ──────────────────────────────────────────────────────────────────────────────
-st.markdown(f"""
+st.markdown(
+    f"""
     <style>
-        /* Gradient Background */
-        .stApp {
-            background: linear-gradient(135deg, {COLORS['gradient_start']}, {COLORS['gradient_end']});
-            color: {COLORS['text_light']};
-        }
-        /* Neon Header */
-        h1 {
-            color: {COLORS['neon_orange']};
-            text-shadow: 0 0 10px {COLORS['neon_orange']}, 0 0 20px {COLORS['neon_orange']};
-        }
-        .stButton>button {
-            background-color: {COLORS['neon_pink']} !important;
-            color: {COLORS['text_light']} !important;
-            border-radius: 12px;
-        }
-
-        .stTextInput input {{
-            background-color: rgba(255,255,255,0.1) !important;
-            color: #fff !important;
-        }}
-        .stButton>button {{
-            background-color: {COLORS['neon_pink']} !important;
-            color: #fff !important;
-            border-radius: 10px;
-        }}
+    .stApp {{
+        background: linear-gradient(135deg, {COLORS['gradient_start']}, {COLORS['gradient_end']});
+        color: {COLORS['text_light']};
+    }}
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SESSION STATE INIT
